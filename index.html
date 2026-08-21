@@ -54,7 +54,8 @@
       </a>
 
       <div class="nav-links" id="desktop-nav">
-        <a href="#example">Task</a>
+        <a href="./example-task.html">Example task</a>
+        <a href="./example-evaluation.html">Example evaluation</a>
         <a href="#submit">Contribute</a>
       </div>
 
@@ -83,7 +84,8 @@
       </div>
 
       <div class="mobile-nav" id="mobile-nav" hidden>
-        <a href="#example">Task</a>
+        <a href="./example-task.html">Example task</a>
+        <a href="./example-evaluation.html">Example evaluation</a>
         <a href="#submit">Contribute</a>
       </div>
     </nav>
@@ -95,7 +97,10 @@
         <div class="hero-content">
           <a class="status-pill" href="#submit">
             <span class="status-dot"></span>
-            Accepting task contributions
+            <span class="status-copy">
+              <strong>Work in progress.</strong>
+              <span>Accepting tasks and co-authors</span>
+            </span>
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M5 12h14M13 6l6 6-6 6"></path>
             </svg>
@@ -106,8 +111,11 @@
             <span>silent training failures?</span>
           </h1>
           <p class="hero-paper-title">
-            <strong>TrainingDxBench:</strong>
-            <span>Benchmarking the Diagnosis of Real-World Model Training Failures</span>
+            <strong>TrainingDxBench</strong>
+            <span>
+              tests whether an Agent can identify silent bugs in a training
+              pipeline and propose the correct fix.
+            </span>
           </p>
 
           <div class="hero-actions">
@@ -115,15 +123,51 @@
               class="button button-primary"
               href="#submit"
             >
-              Contribute a task
+              <span class="action-label-long">Contribute a task</span>
+              <span class="action-label-short">Contribute</span>
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M5 12h14M13 6l6 6-6 6"></path>
               </svg>
             </a>
-            <span class="button button-secondary button-disabled" aria-disabled="true">
-              Request repo access
-            </span>
+            <a class="coauthor-criteria-link" href="#credits">
+              <strong>Co-author path:</strong>
+              <span class="criteria-long">task ≤8 pts · review +2 · referral +2 · 16 total</span>
+              <span class="criteria-short">16 pts total</span>
+            </a>
           </div>
+
+          <nav class="example-page-links hero-example-links" aria-label="Examples and repository access">
+            <a href="./example-task.html">
+              Example task
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6"></path>
+              </svg>
+            </a>
+            <a href="./example-evaluation.html">
+              Example evaluation
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6"></path>
+              </svg>
+            </a>
+            <span class="example-page-disabled" aria-disabled="true">
+              <span class="action-label-long">Request repo access</span>
+              <span class="action-label-short">Repo access</span>
+            </span>
+          </nav>
+
+          <article class="story-panel story-panel-primary hero-story-panel">
+            <h2 class="diagnosis-question">
+              Have you debugged a run that looked fine—but was not?
+            </h2>
+            <p>
+              Training failures are hardest when nothing crashes: the run completes,
+              but the model still behaves incorrectly.
+            </p>
+            <p>
+              The cause may be hidden in data handling, normalization, masking,
+              state, artifacts, or evaluation.
+            </p>
+          </article>
         </div>
       </section>
 
@@ -134,127 +178,144 @@
               <span>01</span>
               <h2>How TrainingDxBench works</h2>
             </div>
+          </div>
+
+          <figure class="diagram-card how-diagram">
+            <img
+              src="./assets/trainingdx-works.webp"
+              alt="Comparison between conventional debugging benchmarks and the TrainingDxBench workflow"
+              width="1774"
+              height="887"
+              loading="lazy"
+            />
+            <button
+              class="diagram-expand"
+              type="button"
+              data-image="./assets/trainingdx-works.webp"
+              data-alt="Comparison between conventional debugging benchmarks and the TrainingDxBench workflow"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"></path>
+              </svg>
+              Expand
+            </button>
+          </figure>
+
+          <article class="story-panel why-diagnosis-panel">
+            <span class="story-label">Why training diagnosis matters</span>
+            <h3>
+              Existing benchmarks target coding bugs, but subtler training bugs
+              matter just as much.
+            </h3>
             <p>
-              Training failures are often hardest when nothing crashes. The script
-              finishes, metrics are emitted, and artifacts are saved, yet the
-              realized training behavior or model outcome is still wrong.
+              Recursive self-improvement (RSI) requires Agents to do more than
+              write runnable code. They must build correct, efficient training
+              pipelines and verify that training behaves as intended.
             </p>
-          </div>
-
-          <div class="how-story-grid">
-            <article class="story-panel story-panel-primary">
-              <span class="story-label">Have you debugged a run that looked fine, but was not?</span>
-              <h3>The failure may take hours, days, or weeks to understand.</h3>
-              <p>
-                A coding agent writes a training script. It runs without errors, but
-                the training behavior or model performance is not what you expected.
-                There is no exception to follow. Instead, you have learning curves,
-                logs, checkpoints, evaluation outputs, and a growing suspicion that
-                something in the pipeline is wrong.
-              </p>
-              <p>
-                Eventually, the cause turns out to be a subtle data problem,
-                incorrect normalization, improperly applied mask, target mismatch,
-                stale state, artifact bug, or misleading evaluation. TrainingDxBench
-                asks whether an Agent can recover that causal chain.
-              </p>
-            </article>
-
-            <article class="story-panel">
-              <span class="story-label">Why diagnosis matters</span>
-              <h3>Writing training code is only the beginning.</h3>
-              <p>
-                Agents that improve models must understand training dynamics,
-                recognize when a completed run has gone off track, diagnose the
-                mechanism, and repair it before the failure compounds.
-              </p>
-              <p>
-                We place Agents in realistic tasks based on authentic model development
-                failures. Each Agent receives the completed flawed workspace and its
-                evidence, then investigates and edits it under a fixed wall clock budget.
-              </p>
-            </article>
-          </div>
+          </article>
 
           <div class="defect-definition">
             <div class="definition-copy">
               <span class="story-label">What is a training defect?</span>
-              <h3>A realistic error that completes normally but changes what happened.</h3>
+              <h3>
+                A training defect lets the run finish, but it harms the training
+                process or result.
+              </h3>
               <p>
-                A valid study demonstrates a controlled, reproducible difference
-                between matched flawed and corrected workflows. The mechanism must
-                be recoverable from the evidence and difficult enough to require
-                genuine investigation rather than an obvious contradiction or trivial puzzle.
+                A valid study compares the same workflow with and without the defect.
+                The evidence should reveal the real cause, but finding it should still
+                require meaningful investigation.
+              </p>
+              <p class="definition-category-intro">
+                We categorize each defect by where its impact appears:
               </p>
             </div>
             <div class="delta-grid">
-              <article class="delta-card delta-process">
-                <span class="delta-symbol">Δp</span>
+              <article class="delta-card">
                 <div>
-                  <h3>Training process difference</h3>
-                  <p>Data exposure, supervision, loss, gradients, updates, state, artifacts, inference, scoring, or selection.</p>
+                  <h3>Defect observed in the training process</h3>
+                  <p>Changes to data exposure, supervision, loss, gradients, updates, state, artifacts, inference, scoring, or selection.</p>
                 </div>
               </article>
-              <article class="delta-card delta-outcome">
-                <span class="delta-symbol">Δq</span>
+              <article class="delta-card">
                 <div>
-                  <h3>Training outcome difference</h3>
-                  <p>Model behavior, task performance, deployment capability, or the officially reported conclusion.</p>
+                  <h3>Defect observed in the training outcome</h3>
+                  <p>Changes in model behavior, task performance, deployment capability, or the reported conclusion.</p>
                 </div>
               </article>
             </div>
           </div>
 
-          <div class="benchmark-stages" aria-label="TrainingDxBench diagnosis flow">
-            <article>
-              <span>1</span>
-              <h3>Observe a completed run</h3>
-              <p>Source, frozen inputs, artifacts, checkpoints, traces, and evaluations remain available as evidence.</p>
-            </article>
-            <article>
-              <span>2</span>
-              <h3>Diagnose the hidden mechanism</h3>
-              <p>The Agent forms competing hypotheses, runs bounded experiments, and directly edits source or data.</p>
-            </article>
-            <article>
-              <span>3</span>
-              <h3>Judge the diagnosis and repair</h3>
-              <p>A tool free Judge compares the submitted explanation and files with the canonical reference.</p>
-            </article>
+          <div class="benchmark-workflow-intro">
+            <span class="story-label">Benchmark workflow</span>
+            <p>
+              In each task, an Agent inspects a completed run and diagnoses the
+              hidden defect. A Judge then evaluates the diagnosis and repair.
+            </p>
           </div>
 
-          <figure class="diagram-card how-diagram">
-              <img
-                src="./assets/trainingdx-works.webp"
-                alt="Comparison between conventional debugging benchmarks and the TrainingDxBench workflow"
-                width="1774"
-                height="887"
-                loading="lazy"
-              />
-              <button
-                class="diagram-expand"
-                type="button"
-                data-image="./assets/trainingdx-works.webp"
-                data-alt="Comparison between conventional debugging benchmarks and the TrainingDxBench workflow"
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"></path>
-                </svg>
-                Expand
-              </button>
-          </figure>
+          <ol class="benchmark-stages" aria-label="TrainingDxBench diagnosis workflow">
+            <li>
+              <div class="benchmark-stage-top">
+                <span class="stage-number">01</span>
+                <span class="stage-phase">Evidence</span>
+              </div>
+              <h3>Observe a completed run</h3>
+              <p>
+                Review the source, frozen inputs, logs, artifacts, checkpoints,
+                traces, and evaluations.
+              </p>
+            </li>
+            <li>
+              <div class="benchmark-stage-top">
+                <span class="stage-number">02</span>
+                <span class="stage-phase">Diagnosis</span>
+              </div>
+              <h3>Diagnose the hidden defect</h3>
+              <p>
+                Form hypotheses, run focused experiments, and trace the failure to
+                its causal mechanism.
+              </p>
+            </li>
+            <li>
+              <div class="benchmark-stage-top">
+                <span class="stage-number">03</span>
+                <span class="stage-phase">Evaluation</span>
+              </div>
+              <h3>Judge the diagnosis and repair</h3>
+              <p>
+                A tool-free Judge compares the Agent's explanation and repaired
+                files with the canonical reference.
+              </p>
+            </li>
+          </ol>
+
         </section>
 
         <section class="section reveal" id="submit">
           <div class="section-heading centered">
             <div class="section-marker">
               <span>02</span>
-              <h2>Things to submit</h2>
+              <h2>To contribute to our benchmark</h2>
             </div>
             <p>
               Package the complete scientific record, not just the line that
               changed, so another researcher can reproduce the failure and its repair.
             </p>
+            <nav class="example-page-links section-example-links" aria-label="Example pages">
+              <a href="./example-task.html">
+                Example task
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M5 12h14M13 6l6 6-6 6"></path>
+                </svg>
+              </a>
+              <a href="./example-evaluation.html">
+                Example evaluation
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M5 12h14M13 6l6 6-6 6"></path>
+                </svg>
+              </a>
+            </nav>
           </div>
 
           <div class="submission-grid">
@@ -267,7 +328,7 @@
               </div>
               <h3>Task information</h3>
               <p>
-                A normalized <code>Task.md</code> with the training goal, defect
+                A complete <code>Task.md</code> with the training goal, defect
                 mechanism, exact configuration, metrics, and measured compute.
               </p>
             </article>
@@ -281,7 +342,7 @@
               <h3>Paired workspaces</h3>
               <p>
                 Complete flawed and corrected runs with frozen inputs, source,
-                artifacts, checkpoints, traces, and relative launch scripts.
+                artifacts, checkpoints, traces, and launch scripts that use relative paths.
               </p>
             </article>
             <article class="submission-card">
@@ -307,8 +368,8 @@
               </div>
               <h3>Evaluation result</h3>
               <p>
-                At least one complete model family evaluation showing that the
-                task is runnable and challenging for current Agents.
+                A complete evaluation of at least one model family, showing that
+                the task runs correctly and challenges current Agents.
               </p>
             </article>
           </div>
@@ -319,26 +380,20 @@
           <div class="section-heading">
             <div class="section-marker">
               <span>03</span>
-              <h2>Build a failure worth diagnosing</h2>
+              <h2>What qualifies as a defect?</h2>
             </div>
-            <p>
-              The strongest contributions preserve the ambiguity, evidence, and
-              interactions across components in failures encountered in real work.
-            </p>
           </div>
 
           <div class="quality-grid">
             <article class="quality-card">
-              <span class="quality-number">01</span>
               <h3>Realistic &amp; silent</h3>
               <p>
-                The workflow finishes without an obvious exception while the
-                realized training process or reported result is wrong.
+                The workflow completes without an obvious error, but the training
+                process or reported result is wrong.
               </p>
               <span class="quality-tag">No crash required</span>
             </article>
             <article class="quality-card">
-              <span class="quality-number">02</span>
               <h3>Genuinely difficult</h3>
               <p>
                 Diagnosis requires meaningful investigation rather than a trivial
@@ -347,19 +402,17 @@
               <span class="quality-tag">Challenging for Agents</span>
             </article>
             <article class="quality-card">
-              <span class="quality-number">03</span>
               <h3>Causally verifiable</h3>
               <p>
-                Matched flawed and corrected arms expose measurable process and
-                outcome differences with a reproducible scorer.
+                Matched flawed and corrected workflows show measurable process and
+                outcome differences that a reproducible scorer can verify.
               </p>
-              <span class="quality-tag">Δp | Δq</span>
+              <span class="quality-tag">Process + outcome</span>
             </article>
             <article class="quality-card">
-              <span class="quality-number">04</span>
               <h3>Portable &amp; bounded</h3>
               <p>
-                The complete task is self contained, offline, and reproducible
+                The complete task is self-contained, offline, and reproducible
                 within the official two RTX A6000 ceiling.
               </p>
               <span class="quality-tag">≤ 2× A6000</span>
@@ -367,365 +420,38 @@
           </div>
         </section>
 
-        <section class="section reveal" id="example">
-          <div class="section-heading centered">
-            <div class="section-marker">
-              <span>04</span>
-              <h2>Example task: padding free chat packing</h2>
-            </div>
-            <p>
-              A training run with normal loss curves silently mixes independent
-              conversations across packed boundaries.
-            </p>
-          </div>
-
-          <div class="task-meta">
-            <div class="task-title-row">
-              <code>padding-free-chat-packing</code>
-              <span class="status-chip status-failed">
-                <span></span>
-                model failed
-              </span>
-            </div>
-            <div class="tag-row" aria-label="Task tags">
-              <span>SFT</span>
-              <span>padding free packing</span>
-              <span>attention masks</span>
-              <span>label alignment</span>
-              <span>Qwen2.5-0.5B</span>
-            </div>
-          </div>
-
-          <div class="mechanism-strip">
-            <article>
-              <span class="mechanism-label flawed-label">Flawed</span>
-              <ol class="mechanism-list">
-                <li>
-                  <code>attention_mask = torch.ones_like(input_ids)</code>
-                  <p>
-                    The dense mask disables packed-segment detection, so later
-                    documents can attend to unrelated earlier documents.
-                  </p>
-                </li>
-                <li>
-                  <code>labels = input_ids.clone()</code>
-                  <p>
-                    Reset positions remain supervised, so each previous
-                    document predicts the next document's first token.
-                  </p>
-                </li>
-              </ol>
-            </article>
-            <span class="mechanism-arrow" aria-hidden="true">→</span>
-            <article>
-              <span class="mechanism-label corrected-label">Corrected</span>
-              <ol class="mechanism-list">
-                <li>
-                  <code>- "attention_mask": torch.ones_like(input_ids),</code>
-                  <p>
-                    Omitting the dense mask lets reset position IDs define
-                    independent packed segments.
-                  </p>
-                </li>
-                <li>
-                  <code>labels[position_ids == 0] = -100</code>
-                  <p>
-                    Ignoring reset-position labels removes cross-document
-                    boundary targets.
-                  </p>
-                </li>
-              </ol>
-            </article>
-          </div>
-
-          <div class="metric-grid" aria-label="Example reference metrics">
-            <article>
-              <div class="metric-topline">
-                <span>Cross document attention pairs</span>
-                <strong>66,144,755 → 0</strong>
-              </div>
-              <div class="metric-track">
-                <span class="metric-fill metric-fill-red" style="--metric-width: 100%"></span>
-                <span class="metric-zero"></span>
-              </div>
-              <p>Training process difference</p>
-            </article>
-            <article>
-              <div class="metric-topline">
-                <span>Boundary targets</span>
-                <strong>3,072 → 0</strong>
-              </div>
-              <div class="metric-track">
-                <span class="metric-fill metric-fill-orange" style="--metric-width: 100%"></span>
-                <span class="metric-zero"></span>
-              </div>
-              <p>Training process difference</p>
-            </article>
-            <article>
-              <div class="metric-topline">
-                <span>Validation perplexity</span>
-                <strong>7.381 → 6.587</strong>
-              </div>
-              <div class="metric-track metric-comparison">
-                <span class="metric-fill metric-fill-red" style="--metric-width: 91%"></span>
-                <span class="metric-fill metric-fill-green" style="--metric-width: 81%"></span>
-              </div>
-              <p>Training outcome difference</p>
-            </article>
-          </div>
-
-          <div class="browser-context">
-            <strong>Complete workspace structure</strong>
-            <p>
-              Every source file, configuration, compact training trace, and summary
-              is directly viewable. Large datasets, weights, predictions, and
-              optimizer states are listed with their exact package names and sizes.
-            </p>
-          </div>
-
-          <div class="code-browser" data-code-browser>
-            <div class="browser-toolbar">
-              <div class="window-dots" aria-hidden="true">
-                <span></span><span></span><span></span>
-              </div>
-              <div class="browser-path" data-browser-path>
-                tasks/padding-free-chat-packing/<strong>Task.md</strong>
-              </div>
-              <div class="browser-actions">
-                <button type="button" data-wrap-toggle aria-pressed="false">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M4 6h16M4 12h12a4 4 0 0 1 0 8h-3M13 17l-3 3 3 3"></path>
-                  </svg>
-                  Wrap
-                </button>
-                <button type="button" data-copy-code>
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <rect x="8" y="8" width="12" height="12" rx="2"></rect>
-                    <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path>
-                  </svg>
-                  <span>Copy</span>
-                </button>
-              </div>
-            </div>
-
-            <div class="browser-body">
-              <aside
-                class="file-tree"
-                aria-label="Complete example task structure"
-                data-generated-tree="task"
-              ></aside>
-
-              <div class="code-pane">
-                <div class="code-loading" data-code-loading>Loading Task.md…</div>
-                <pre class="code-output" data-code-output tabindex="0" aria-label="Selected task file"></pre>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="section reveal" id="evaluation">
-          <div class="section-heading centered">
-            <div class="section-marker">
-              <span>05</span>
-              <h2>Example evaluation</h2>
-            </div>
-            <p>
-              The Agent found the primary mechanism but submitted an incomplete
-              repair. The Judge preserved that distinction.
-            </p>
-          </div>
-
-          <div class="evaluation-summary">
-            <article class="evaluation-status-card">
-              <div class="evaluation-status-top">
-                <span class="status-chip status-failed"><span></span>failed</span>
-                <code>repair_mismatch</code>
-              </div>
-              <h3>Claude Sonnet 5 diagnosed attention leakage, but missed label leakage.</h3>
-              <p>
-                The Agent removed the dense attention mask, restoring packed segment
-                isolation. It did not mask reset position labels, so the final token of
-                one document still supervised the first token of the next.
-              </p>
-              <dl class="run-meta">
-                <div><dt>Agent</dt><dd>Claude Sonnet 5</dd></div>
-                <div><dt>Harness</dt><dd>Copilot CLI</dd></div>
-                <div><dt>Judge</dt><dd>Claude Opus 5</dd></div>
-                <div><dt>Outcome</dt><dd>Defect ✓ / Repair ✕</dd></div>
-              </dl>
-            </article>
-
-            <div class="evaluation-flow" aria-label="Evaluation decision flow">
-              <article class="flow-step flow-success">
-                <span class="flow-icon">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg>
-                </span>
-                <div>
-                  <span>Step 1 Diagnose</span>
-                  <h3>Defect match</h3>
-                  <p>Correctly localized dense packed attention.</p>
-                </div>
-              </article>
-              <span class="flow-connector" aria-hidden="true"></span>
-              <article class="flow-step flow-warning">
-                <span class="flow-icon">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v5M12 17h.01M10 3h4l8 16H2z"></path></svg>
-                </span>
-                <div>
-                  <span>Step 2 Repair</span>
-                  <h3>Incomplete patch</h3>
-                  <p>Boundary target masking remained unresolved.</p>
-                </div>
-              </article>
-              <span class="flow-connector" aria-hidden="true"></span>
-              <article class="flow-step flow-failed">
-                <span class="flow-icon">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"></path></svg>
-                </span>
-                <div>
-                  <span>Step 3 Judge</span>
-                  <h3>Repair mismatch</h3>
-                  <p>Semantically different from the complete correction.</p>
-                </div>
-              </article>
-            </div>
-          </div>
-
-          <div class="protocol-note">
-            <span>Protocol note</span>
-            This run used the current time only protocol and completed in 990.778
-            seconds without exhausting its 1,800 second Agent budget. There was no
-            step, turn, tool call, or optimizer update limit.
-          </div>
-
-          <div class="browser-context">
-            <strong>Complete evaluation result structure</strong>
-            <p>
-              Browse the Agent answer, frozen submission, submitted repair,
-              Judge evidence, and final result. The public Agent and Judge
-              trajectories preserve the original recorded runtime events, messages,
-              tool calls, tool results, timing, and outcomes.
-            </p>
-          </div>
-
-          <div class="code-browser evaluation-browser" data-code-browser>
-            <div class="browser-toolbar">
-              <div class="window-dots" aria-hidden="true">
-                <span></span><span></span><span></span>
-              </div>
-              <div class="browser-path" data-browser-path>
-                evaluation/results/padding-free-chat-packing/<strong>answer.txt</strong>
-              </div>
-              <div class="browser-actions">
-                <button type="button" data-wrap-toggle aria-pressed="true">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M4 6h16M4 12h12a4 4 0 0 1 0 8h-3M13 17l-3 3 3 3"></path>
-                  </svg>
-                  Wrap
-                </button>
-                <button type="button" data-copy-code>
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <rect x="8" y="8" width="12" height="12" rx="2"></rect>
-                    <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path>
-                  </svg>
-                  <span>Copy</span>
-                </button>
-              </div>
-            </div>
-            <div class="browser-body">
-              <aside
-                class="file-tree"
-                aria-label="Complete evaluation result structure"
-                data-generated-tree="evaluation"
-              ></aside>
-              <div class="code-pane">
-                <div class="code-loading" data-code-loading role="status" aria-live="polite">Loading evaluation artifact…</div>
-                <pre class="code-output is-wrapped" data-code-output tabindex="0" aria-label="Selected evaluation artifact"></pre>
-              </div>
-            </div>
-          </div>
-        </section>
-
         <section class="section reveal" id="contract">
           <div class="section-heading">
             <div class="section-marker">
-              <span>06</span>
-              <h2>One protocol, across every study</h2>
-            </div>
-            <p>
-              Admission evidence, Agent isolation, and Judge routing are fixed so
-              model failures remain interpretable.
-            </p>
-          </div>
-
-          <div class="protocol-flow" aria-label="TrainingDxBench evaluation protocol">
-            <article>
-              <span>01</span>
-              <div class="protocol-icon">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12 10 17 20 6"></path></svg>
-              </div>
-              <h3>Author audit</h3>
-              <p>Validate package shape, exact diffs, isolation, and paired metrics.</p>
-            </article>
-            <div class="protocol-arrow" aria-hidden="true">→</div>
-            <article>
-              <span>02</span>
-              <div class="protocol-icon">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 9h8M8 13h5M9 19H5V5h14v8M16 19l2 2 4-5"></path></svg>
-              </div>
-              <h3>Anonymous Agent</h3>
-              <p>Expose only the flawed completed workspace in an offline sandbox.</p>
-            </article>
-            <div class="protocol-arrow" aria-hidden="true">→</div>
-            <article>
-              <span>03</span>
-              <div class="protocol-icon">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3h8v4H8zM5 7h14v14H5zM9 12h6M9 16h4"></path></svg>
-              </div>
-              <h3>Freeze submission</h3>
-              <p>Match declared paths to the final source/data diff and snapshot files.</p>
-            </article>
-            <div class="protocol-arrow" aria-hidden="true">→</div>
-            <article>
               <span>04</span>
-              <div class="protocol-icon">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 3 7v5c0 5 4 8 9 9 5-1 9-4 9-9V7zM9 12l2 2 4-5"></path></svg>
-              </div>
-              <h3>Tool free Judge</h3>
-              <p>Compare the diagnosis and repair semantically with the reference.</p>
-            </article>
+              <h2>Submission requirements</h2>
+            </div>
           </div>
 
           <div class="contract-grid">
             <article>
-              <span class="contract-glyph">Δ</span>
-              <h3>Show both differences</h3>
+              <h3>Show process and outcome differences</h3>
               <p>Every task must document a reproducible process difference and outcome difference.</p>
             </article>
             <article>
-              <span class="contract-glyph">≡</span>
-              <h3>Exact canonical paths</h3>
-              <p>Oracle modified paths must equal the complete source and data diff between flawed and corrected workspaces.</p>
+              <h3>Match the canonical paths</h3>
+              <p>The paths listed in the Oracle must exactly match all source and data changes between the flawed and corrected workspaces.</p>
             </article>
             <article>
-              <span class="contract-glyph">ƒ</span>
               <h3>Recompute references</h3>
               <p><code>score.py</code> must reproduce every metric declared in <code>contract.json</code>.</p>
             </article>
             <article>
-              <span class="contract-glyph">⏱</span>
-              <h3>Time only Agent budget</h3>
-              <p>One 1,800 second wall clock budget with no step, turn, subrun, or update limit.</p>
+              <h3>Fixed Agent time budget</h3>
+              <p>Agents receive one 1,800-second wall-clock budget, with no limits on steps, turns, subruns, or updates.</p>
             </article>
             <article>
-              <span class="contract-glyph">◎</span>
-              <h3>Binary collection result</h3>
-              <p>A task resolves only when both defect and repair semantically match.</p>
+              <h3>Binary evaluation result</h3>
+              <p>A task passes only when both the diagnosis and repair semantically match the canonical reference.</p>
             </article>
             <article>
-              <span class="contract-glyph">2×</span>
               <h3>Bounded compute</h3>
-              <p>Every official task must reproduce within at most two NVIDIA RTX A6000 GPUs.</p>
+              <p>Every official task must be reproducible on no more than two NVIDIA RTX A6000 GPUs.</p>
             </article>
           </div>
 
@@ -750,41 +476,41 @@
               <p>Use Codex CLI or Copilot CLI with reasoning effort <code>max</code>.</p>
             </article>
             <div class="family-requirement">
-              <strong>PR threshold</strong>
-              <span>At least one model in your selected family must fail before opening the task PR.</span>
+              <strong>Submission threshold</strong>
+              <span>At least one model in your selected family must fail before you open the task pull request.</span>
             </div>
           </div>
 
           <div class="faq-list">
             <details>
-              <summary>What does the diagnosis Agent see?</summary>
+              <summary>What does the diagnosis Agent receive?</summary>
               <p>
-                Only an anonymous independent copy of the completed flawed
+                Only an anonymized, independent copy of the completed flawed
                 workspace. The Agent cannot access <code>Task.md</code>, the
-                corrected workspace, Oracle, scorer, repository parent, or run metadata.
+                corrected workspace, Oracle, scorer, parent repository, or run metadata.
               </p>
             </details>
             <details>
-              <summary>What happens when the 1,800 second budget expires?</summary>
+              <summary>What happens when the 1,800-second budget expires?</summary>
               <p>
-                Workspace and shell access stop. The same Agent invocation returns
+                Workspace and shell access end. The same Agent invocation returns
                 its best final assessment, and the result records
-                <code>budget_exhausted: true</code>. Exhaustion alone does not decide
-                whether the repair resolves the task.
+                <code>budget_exhausted: true</code>. Running out of time does not,
+                by itself, determine whether the repair resolves the task.
               </p>
             </details>
             <details>
-              <summary>Does collection evaluation rerun the Agent repair?</summary>
+              <summary>Does the final evaluation rerun the Agent's repair?</summary>
               <p>
-                No. Archived paired scoring establishes task validity. A single
-                tool free Judge then compares the Agent diagnosis and submitted
-                repair with the canonical reference.
+                No. Archived paired scoring establishes task validity. An independent
+                Judge then compares the Agent's diagnosis and submitted repair with
+                the canonical reference.
               </p>
             </details>
             <details>
               <summary>Can I author on different hardware?</summary>
               <p>
-                Yes. Author hardware may differ, but the task must remain
+                Yes. You may use different authoring hardware, but the task must remain
                 reproducible within the official two RTX A6000 ceiling while
                 preserving effective batch, update budget, and mechanism semantics.
               </p>
@@ -796,8 +522,7 @@
           <div class="credits-hero">
             <div>
               <div class="section-marker">
-                <span>07</span>
-                <h2>Your failures can become shared scientific infrastructure.</h2>
+                <h2>Contribute as a co-author</h2>
               </div>
               <p>
                 Credits reward difficult tasks, careful human review, and bringing
@@ -809,10 +534,10 @@
                 <span>Refer a contributor</span>
               </div>
             </div>
-            <div class="coauthor-ring" aria-label="16 points earns paper coauthorship">
+            <div class="coauthor-ring" aria-label="16 points earns paper co-authorship">
               <span>16</span>
               <strong>points</strong>
-              <small>paper coauthor</small>
+              <small>paper co-author</small>
             </div>
           </div>
 
@@ -820,34 +545,30 @@
             <article class="points-card">
               <div class="points-card-header">
                 <div>
-                  <span>Task contribution</span>
+                  <span>Task reward tiers</span>
                   <h3>Points by official model failures</h3>
                 </div>
-                <span class="minimum-chip">minimum 2 failures</span>
+                <span class="minimum-chip">2 failures required</span>
               </div>
-              <div class="points-chart">
-                <div class="points-row">
-                  <span class="fail-count">5 fail</span>
-                  <div class="points-bar"><span style="--bar-width: 100%"></span></div>
-                  <strong>8 pts</strong>
-                </div>
-                <div class="points-row">
-                  <span class="fail-count">4 fail</span>
-                  <div class="points-bar"><span style="--bar-width: 75%"></span></div>
-                  <strong>6 pts</strong>
-                </div>
-                <div class="points-row">
-                  <span class="fail-count">3 fail</span>
-                  <div class="points-bar"><span style="--bar-width: 50%"></span></div>
-                  <strong>4 pts</strong>
-                </div>
-                <div class="points-row">
-                  <span class="fail-count">2 fail</span>
-                  <div class="points-bar"><span style="--bar-width: 25%"></span></div>
-                  <strong>2 pts</strong>
-                </div>
-              </div>
-              <p>Tasks with fewer than two official model failures are not merged.</p>
+              <ol class="points-tiers" aria-label="Task contribution point tiers">
+                <li>
+                  <span>2 failures</span>
+                  <strong>+2 points</strong>
+                </li>
+                <li>
+                  <span>3 failures</span>
+                  <strong>+4 points</strong>
+                </li>
+                <li>
+                  <span>4 failures</span>
+                  <strong>+6 points</strong>
+                </li>
+                <li>
+                  <span>5 failures</span>
+                  <strong>+8 points</strong>
+                </li>
+              </ol>
+              <p>A task must make at least two official models fail before it can be merged.</p>
             </article>
 
             <div class="side-credit-grid">
@@ -865,10 +586,12 @@
                 </div>
                 <span>Referral</span>
                 <strong>+2 points</strong>
-                <p>Earned when the referred contributor's first task is merged.</p>
+                <p>Awarded when a referred contributor's first task is merged.</p>
               </article>
             </div>
           </div>
+
+          <p class="contributors-note">All contributors will be acknowledged.</p>
         </section>
 
       </div>
@@ -892,15 +615,15 @@
         </div>
         <div class="footer-links">
           <div>
-            <h3>Task</h3>
-            <a href="#example">Example task</a>
-            <a href="#evaluation">Example evaluation</a>
-            <a href="#contract">Evaluation contract</a>
+            <h3>Explore</h3>
+            <a href="./example-task.html">Example task</a>
+            <a href="./example-evaluation.html">Example evaluation</a>
+            <a href="#contract">Submission requirements</a>
           </div>
           <div>
             <h3>Contribute</h3>
-            <a href="#submit">Things to submit</a>
-            <a href="#credits">Credits</a>
+            <a href="#submit">Contribute to the benchmark</a>
+            <a href="#credits">Co-authorship</a>
             <a href="./CALL_FOR_PARTICIPATION.md" target="_blank" rel="noreferrer">Full participation call</a>
           </div>
         </div>

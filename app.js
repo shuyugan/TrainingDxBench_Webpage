@@ -85,7 +85,9 @@
 
   const navLinks = [...document.querySelectorAll("#desktop-nav a")];
   const navTargets = navLinks
-    .map((link) => document.querySelector(link.getAttribute("href")))
+    .map((link) => link.getAttribute("href"))
+    .filter((href) => href?.startsWith("#"))
+    .map((href) => document.querySelector(href))
     .filter(Boolean);
 
   if ("IntersectionObserver" in window) {
@@ -629,6 +631,11 @@
     const wrapButton = browser.querySelector("[data-wrap-toggle]");
     const copyButton = browser.querySelector("[data-copy-code]");
     let requestId = 0;
+
+    if (window.matchMedia("(max-width: 520px)").matches && output && wrapButton) {
+      output.classList.add("is-wrapped");
+      wrapButton.setAttribute("aria-pressed", "true");
+    }
 
     async function activate(button) {
       if (!button || !output || !loading) return;
