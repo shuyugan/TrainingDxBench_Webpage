@@ -522,6 +522,7 @@ pre {
   align-items: center;
   justify-content: flex-start;
   gap: 9px;
+  padding-left: 24px;
   color: var(--text-soft);
   font-size: 12px;
   line-height: 1.4;
@@ -2668,6 +2669,7 @@ pre {
     width: auto;
     justify-content: center;
     gap: 5px;
+    padding-left: 0;
     font-size: 11px;
     text-align: center;
     white-space: normal;
