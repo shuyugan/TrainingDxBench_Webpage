@@ -1,0 +1,34 @@
+{
+  "task_id": "padding-free-chat-packing",
+  "agent_runtime": "copilot",
+  "agent_model": "claude-sonnet-5",
+  "judge_runtime": "copilot",
+  "judge_model": "claude-opus-5",
+  "status": "failed",
+  "resolved": false,
+  "route": "repair_mismatch",
+  "budget": {
+    "agent_session_seconds": 1800,
+    "agent_steps": 100
+  },
+  "usage": {
+    "agent_session_seconds": 1216.171,
+    "agent_steps": 73
+  },
+  "hardware": {
+    "gpus": [
+      {
+        "logical_index": 0,
+        "name": "NVIDIA RTX 6000 Ada Generation",
+        "memory_mib": 48510
+      }
+    ],
+    "cpu_count": 128
+  },
+  "software": {
+    "python": "3.11.15",
+    "torch": "2.6.0+cu124",
+    "torch_cuda": "12.4",
+    "transformers": "5.12.1"
+  }
+}

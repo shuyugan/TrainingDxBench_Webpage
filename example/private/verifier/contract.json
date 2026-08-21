@@ -1,0 +1,33 @@
+{
+  "differences": [
+    {
+      "kind": "training_process",
+      "metric": "cross_document_attention_pairs",
+      "description": "Number of causally reachable token pairs whose query and key belong to different packed documents."
+    },
+    {
+      "kind": "training_process",
+      "metric": "cross_document_boundary_targets",
+      "description": "Number of later-document first tokens supervised by the preceding document's final logits."
+    },
+    {
+      "kind": "training_outcome",
+      "metric": "validation_perplexity",
+      "description": "Token-weighted perplexity on the frozen unpacked validation documents."
+    }
+  ],
+  "metrics": {
+    "cross_document_attention_pairs": {
+      "flawed": 66144755.0,
+      "corrected": 0.0
+    },
+    "cross_document_boundary_targets": {
+      "flawed": 3072.0,
+      "corrected": 0.0
+    },
+    "validation_perplexity": {
+      "flawed": 7.381228470005752,
+      "corrected": 6.586580446529749
+    }
+  }
+}

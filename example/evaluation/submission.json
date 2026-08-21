@@ -1,0 +1,10 @@
+{
+  "has_bug": true,
+  "defect_description": "PackedBatchCollator (source/collator.py) packs DOCUMENTS_PER_PACK independent chat documents into one training sequence and resets position_ids to 0 per document, but builds attention_mask as torch.ones_like(input_ids) — a plain full causal mask with no per-document isolation. This lets later documents in a pack attend across unrelated earlier documents (confirmed empirically: changing an earlier packed document changes a later document's logits by up to ~9.9, mean ~1.6), and creates nonsensical negative RoPE relative-position offsets at pack boundaries. This corrupts the training signal for the majority of packed tokens and mismatches the isolated, per-document attention used at evaluation time. The collator also computes document_lengths but never uses it anywhere in source/, confirming the document-isolation step was implemented incompletely (metadata computed, but the mask that should consume it was never built).",
+  "repair": {
+    "description": "Modified PackedBatchCollator to build a block-diagonal causal attention mask from document_lengths, restricting each document's attention to its own tokens (still causal within itself), matching the position_ids reset and the isolated per-document behavior used during evaluation. Verified the mechanism (leakage eliminated to bf16 noise level) and end-to-end forward/backward/optimizer-step correctness against the real model, adapter, and training data.",
+    "modified_paths": [
+      "source/collator.py"
+    ]
+  }
+}

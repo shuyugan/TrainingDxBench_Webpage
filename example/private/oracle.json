@@ -1,0 +1,10 @@
+{
+  "has_bug": true,
+  "defect_description": "Padding-free packing resets position IDs at each independent document, but the collator supplies a dense all-ones attention mask that permits cross-document attention and leaves every later document's first token active as a cross-document next-token target.",
+  "repair": {
+    "description": "Preserve the reset position IDs, omit the dense attention mask so the model derives independent packed segments, and set labels to -100 at every reset position so no document boundary creates a cross-document target.",
+    "modified_paths": [
+      "source/collator.py"
+    ]
+  }
+}
