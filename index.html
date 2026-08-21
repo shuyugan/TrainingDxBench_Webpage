@@ -543,9 +543,9 @@
               </div>
               <h3>Claude Sonnet 5 diagnosed attention leakage, but missed label leakage.</h3>
               <p>
-                The submitted block diagonal attention mask addressed cross document
-                attention. It did not mask reset position labels, so the final token
-                of one document still supervised the first token of the next.
+                The Agent removed the dense attention mask, restoring packed segment
+                isolation. It did not mask reset position labels, so the final token of
+                one document still supervised the first token of the next.
               </p>
               <dl class="run-meta">
                 <div><dt>Agent</dt><dd>Claude Sonnet 5</dd></div>
@@ -593,8 +593,8 @@
 
           <div class="protocol-note">
             <span>Protocol note</span>
-            This illustrative run predates the current time only budget metadata.
-            Current official runs use one 1,800 second Agent time budget with no
+            This run used the current time only protocol and completed in 990.778
+            seconds without exhausting its 1,800 second Agent budget. There was no
             step, turn, tool call, or optimizer update limit.
           </div>
 
@@ -603,8 +603,8 @@
             <p>
               Browse the Agent answer, frozen submission, submitted repair,
               Judge evidence, and final result. The public Agent and Judge
-              trajectories preserve the recorded messages, tool calls, tool results,
-              timing, and outcomes while omitting runtime bootstrap and system snapshots.
+              trajectories preserve the original recorded runtime events, messages,
+              tool calls, tool results, timing, and outcomes.
             </p>
           </div>
 
