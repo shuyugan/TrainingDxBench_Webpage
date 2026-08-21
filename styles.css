@@ -909,6 +909,12 @@ pre {
   margin-top: 16px;
 }
 
+.definition-copy .definition-category-intro {
+  margin-top: 16px;
+  color: var(--text);
+  font-weight: 700;
+}
+
 .defect-definition {
   display: grid;
   align-items: center;
