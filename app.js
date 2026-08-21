@@ -632,6 +632,11 @@
     const copyButton = browser.querySelector("[data-copy-code]");
     let requestId = 0;
 
+    if (window.matchMedia("(max-width: 520px)").matches && output && wrapButton) {
+      output.classList.add("is-wrapped");
+      wrapButton.setAttribute("aria-pressed", "true");
+    }
+
     async function activate(button) {
       if (!button || !output || !loading) return;
       const currentRequest = ++requestId;

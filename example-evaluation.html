@@ -115,8 +115,8 @@
               </div>
               <h3>Claude Sonnet 5 diagnosed attention leakage, but missed label leakage.</h3>
               <p>
-                The submitted block-diagonal attention mask fixed cross-document
-                attention, but it did not mask reset-position labels. As a result,
+                The Agent removed the dense attention mask, restoring isolation
+                between packed segments. It did not mask reset-position labels, so
                 the final token of one document still supervised the first token of the next.
               </p>
               <dl class="run-meta">
@@ -165,9 +165,9 @@
 
           <div class="protocol-note">
             <span>Protocol note</span>
-            This illustrative run predates the current budget-reporting format.
-            Official runs now use one 1,800-second Agent time budget with no limits
-            on steps, turns, tool calls, or optimizer updates.
+            This run completed in 990.778 seconds without exhausting its 1,800-second
+            Agent budget. It had no limits on steps, turns, tool calls, or optimizer
+            updates.
           </div>
 
           <div class="browser-context">
@@ -175,8 +175,8 @@
             <p>
               Browse the Agent's answer, frozen submission, proposed repair,
               Judge evidence, and final result. Public Agent and Judge trajectories
-              preserve messages, tool calls, tool results, timing, and outcomes
-              while omitting runtime bootstrap data and system snapshots.
+              preserve the original runtime events, messages, tool calls, tool
+              results, timing, and outcomes.
             </p>
           </div>
 

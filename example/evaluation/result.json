@@ -8,13 +8,13 @@
   "resolved": false,
   "route": "repair_mismatch",
   "budget": {
-    "agent_session_seconds": 1800,
-    "agent_steps": 100
+    "agent_time_seconds": 1800
   },
   "usage": {
-    "agent_session_seconds": 1216.171,
-    "agent_steps": 73
+    "agent_time_seconds": 990.778,
+    "agent_total_seconds": 990.778
   },
+  "budget_exhausted": false,
   "hardware": {
     "gpus": [
       {

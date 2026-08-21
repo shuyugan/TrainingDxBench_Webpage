@@ -127,14 +127,42 @@
           <div class="mechanism-strip">
             <article>
               <span class="mechanism-label flawed-label">Flawed</span>
-              <code>attention_mask = torch.ones_like(input_ids)</code>
-              <p>Later documents can attend to unrelated earlier documents.</p>
+              <ol class="mechanism-list">
+                <li>
+                  <code>attention_mask = torch.ones_like(input_ids)</code>
+                  <p>
+                    The dense mask disables packed-segment detection, allowing later
+                    documents to attend to unrelated earlier documents.
+                  </p>
+                </li>
+                <li>
+                  <code>labels = input_ids.clone()</code>
+                  <p>
+                    Reset positions remain supervised, causing each document to
+                    predict the first token of the next document.
+                  </p>
+                </li>
+              </ol>
             </article>
             <span class="mechanism-arrow" aria-hidden="true">→</span>
             <article>
               <span class="mechanism-label corrected-label">Corrected</span>
-              <code>labels[position_ids == 0] = -100</code>
-              <p>Independent segments and boundary targets are restored.</p>
+              <ol class="mechanism-list">
+                <li>
+                  <code>- "attention_mask": torch.ones_like(input_ids),</code>
+                  <p>
+                    Removing the dense mask lets reset position IDs define
+                    independent packed segments.
+                  </p>
+                </li>
+                <li>
+                  <code>labels[position_ids == 0] = -100</code>
+                  <p>
+                    Ignoring reset-position labels removes cross-document boundary
+                    targets.
+                  </p>
+                </li>
+              </ol>
             </article>
           </div>
 
