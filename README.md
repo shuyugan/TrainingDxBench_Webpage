@@ -17,6 +17,8 @@ Then open <http://localhost:8000/>.
 
 ```text
 index.html       Landing-page content and semantic structure
+example-task.html  Standalone example task and workspace browser
+example-evaluation.html  Standalone Agent evaluation and result browser
 styles.css       Responsive visual system and layout
 app.js           Neural background, code browsers, theme, and interactions
 assets/          Optimized diagrams and site icon

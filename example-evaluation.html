@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Explore a complete TrainingDxBench evaluation, including the Agent's submitted repair, the Judge's evidence, and the final result."
+    />
+    <meta name="theme-color" content="#f6f8fc" />
+    <meta property="og:title" content="Example Evaluation | TrainingDxBench" />
+    <meta
+      property="og:description"
+      content="Inspect how TrainingDxBench evaluates an Agent's diagnosis and repair."
+    />
+    <meta property="og:type" content="website" />
+    <title>Example Evaluation | TrainingDxBench</title>
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script>
+      (() => {
+        document.documentElement.classList.add("js");
+        let saved = null;
+        try {
+          saved = localStorage.getItem("trainingdx-theme");
+        } catch {
+          saved = null;
+        }
+        const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        document.documentElement.dataset.theme = saved || (dark ? "dark" : "light");
+      })();
+    </script>
+    <script src="./app.js" defer></script>
+  </head>
+  <body class="standalone-page">
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
+    <nav class="site-nav" aria-label="Primary navigation">
+      <a class="brand" href="./index.html" aria-label="TrainingDxBench home">
+        <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+          <circle cx="20" cy="20" r="17.5" fill="none" stroke="currentColor" stroke-width="1.5" />
+          <path d="M10 25 15 16l6 7 8-11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <circle cx="10" cy="25" r="2.5" fill="currentColor" />
+          <circle cx="15" cy="16" r="2.5" fill="currentColor" />
+          <circle cx="21" cy="23" r="2.5" fill="currentColor" />
+          <circle cx="29" cy="12" r="3" fill="var(--accent-orange)" />
+        </svg>
+        <span>TrainingDxBench</span>
+      </a>
+
+      <div class="nav-links" id="desktop-nav">
+        <a href="./index.html">Home</a>
+        <a href="./example-task.html">Example task</a>
+        <a class="is-active" href="./example-evaluation.html" aria-current="page">Example evaluation</a>
+        <a href="./index.html#submit">Contribute</a>
+      </div>
+
+      <div class="nav-actions">
+        <button class="icon-button" id="theme-toggle" type="button" aria-label="Switch color theme">
+          <svg class="sun-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"></path>
+          </svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"></path>
+          </svg>
+        </button>
+        <button
+          class="icon-button menu-toggle"
+          id="menu-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="mobile-nav"
+          aria-label="Open navigation"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="mobile-nav" id="mobile-nav" hidden>
+        <a href="./index.html">Home</a>
+        <a href="./example-task.html">Example task</a>
+        <a href="./example-evaluation.html" aria-current="page">Example evaluation</a>
+        <a href="./index.html#submit">Contribute</a>
+      </div>
+    </nav>
+
+    <main class="example-page-main" id="main-content">
+      <div class="page-shell">
+        <section class="section example-page-section" id="evaluation">
+          <a class="back-home-link" href="./index.html">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M19 12H5M11 18l-6-6 6-6"></path>
+            </svg>
+            Back to home
+          </a>
+
+          <div class="section-heading centered">
+            <div class="section-marker">
+              <h1>Example evaluation</h1>
+            </div>
+            <p>
+              The Agent found the primary defect but submitted an incomplete repair,
+              and the Judge captured that distinction.
+            </p>
+          </div>
+
+          <div class="evaluation-summary">
+            <article class="evaluation-status-card">
+              <div class="evaluation-status-top">
+                <span class="status-chip status-failed"><span></span>failed</span>
+                <code>repair_mismatch</code>
+              </div>
+              <h3>Claude Sonnet 5 diagnosed attention leakage, but missed label leakage.</h3>
+              <p>
+                The submitted block-diagonal attention mask fixed cross-document
+                attention, but it did not mask reset-position labels. As a result,
+                the final token of one document still supervised the first token of the next.
+              </p>
+              <dl class="run-meta">
+                <div><dt>Agent</dt><dd>Claude Sonnet 5</dd></div>
+                <div><dt>Harness</dt><dd>Copilot CLI</dd></div>
+                <div><dt>Judge</dt><dd>Claude Opus 5</dd></div>
+                <div><dt>Outcome</dt><dd>Defect ✓ / Repair ✕</dd></div>
+              </dl>
+            </article>
+
+            <div class="evaluation-flow" aria-label="Evaluation decision flow">
+              <article class="flow-step flow-success">
+                <span class="flow-icon">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg>
+                </span>
+                <div>
+                  <span>Step 1 Diagnose</span>
+                  <h3>Defect match</h3>
+                  <p>Correctly identified dense attention across packed documents.</p>
+                </div>
+              </article>
+              <span class="flow-connector" aria-hidden="true"></span>
+              <article class="flow-step flow-warning">
+                <span class="flow-icon">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v5M12 17h.01M10 3h4l8 16H2z"></path></svg>
+                </span>
+                <div>
+                  <span>Step 2 Repair</span>
+                  <h3>Incomplete patch</h3>
+                  <p>Boundary target masking remained unresolved.</p>
+                </div>
+              </article>
+              <span class="flow-connector" aria-hidden="true"></span>
+              <article class="flow-step flow-failed">
+                <span class="flow-icon">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"></path></svg>
+                </span>
+                <div>
+                  <span>Step 3 Judge</span>
+                  <h3>Repair mismatch</h3>
+                  <p>The repair did not match the complete correction.</p>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <div class="protocol-note">
+            <span>Protocol note</span>
+            This illustrative run predates the current budget-reporting format.
+            Official runs now use one 1,800-second Agent time budget with no limits
+            on steps, turns, tool calls, or optimizer updates.
+          </div>
+
+          <div class="browser-context">
+            <strong>Complete evaluation result structure</strong>
+            <p>
+              Browse the Agent's answer, frozen submission, proposed repair,
+              Judge evidence, and final result. Public Agent and Judge trajectories
+              preserve messages, tool calls, tool results, timing, and outcomes
+              while omitting runtime bootstrap data and system snapshots.
+            </p>
+          </div>
+
+          <div class="code-browser evaluation-browser" data-code-browser>
+            <div class="browser-toolbar">
+              <div class="window-dots" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="browser-path" data-browser-path>
+                evaluation/results/padding-free-chat-packing/<strong>answer.txt</strong>
+              </div>
+              <div class="browser-actions">
+                <button type="button" data-wrap-toggle aria-pressed="true">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 6h16M4 12h12a4 4 0 0 1 0 8h-3M13 17l-3 3 3 3"></path>
+                  </svg>
+                  Wrap
+                </button>
+                <button type="button" data-copy-code>
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+                    <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path>
+                  </svg>
+                  <span>Copy</span>
+                </button>
+              </div>
+            </div>
+            <div class="browser-body">
+              <aside
+                class="file-tree"
+                aria-label="Complete evaluation result structure"
+                data-generated-tree="evaluation"
+              ></aside>
+              <div class="code-pane">
+                <div class="code-loading" data-code-loading role="status" aria-live="polite">Loading evaluation artifact…</div>
+                <pre class="code-output is-wrapped" data-code-output tabindex="0" aria-label="Selected evaluation artifact"></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <a class="brand" href="./index.html">
+            <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+              <circle cx="20" cy="20" r="17.5" fill="none" stroke="currentColor" stroke-width="1.5" />
+              <path d="M10 25 15 16l6 7 8-11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <circle cx="10" cy="25" r="2.5" fill="currentColor" />
+              <circle cx="15" cy="16" r="2.5" fill="currentColor" />
+              <circle cx="21" cy="23" r="2.5" fill="currentColor" />
+              <circle cx="29" cy="12" r="3" fill="var(--accent-orange)" />
+            </svg>
+            <span>TrainingDxBench</span>
+          </a>
+          <p>Diagnosing silent failures across the model training lifecycle.</p>
+        </div>
+        <div class="footer-links">
+          <div>
+            <h3>Examples</h3>
+            <a href="./example-task.html">Example task</a>
+            <a href="./example-evaluation.html">Example evaluation</a>
+          </div>
+          <div>
+            <h3>Contribute</h3>
+            <a href="./index.html#submit">Contribute to the benchmark</a>
+            <a href="./CALL_FOR_PARTICIPATION.md" target="_blank" rel="noreferrer">Full participation call</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span id="current-year">2026</span> TrainingDxBench</span>
+        <span>Built for open, reproducible training failure research.</span>
+      </div>
+    </footer>
+  </body>
+</html>
