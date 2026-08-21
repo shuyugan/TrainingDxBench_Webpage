@@ -499,11 +499,15 @@ pre {
 
 .hero-actions {
   display: grid;
-  width: min(100%, 760px);
+  width: min(100%, 700px);
   align-items: center;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
   margin: 30px auto 0;
+}
+
+.hero-actions > .button {
+  width: 100%;
 }
 
 .action-label-short,
@@ -526,6 +530,7 @@ pre {
   transition:
     color 160ms ease,
     transform 160ms ease;
+  grid-column: 2 / -1;
 }
 
 .coauthor-criteria-link strong {
@@ -535,17 +540,6 @@ pre {
 
 .coauthor-criteria-link span {
   font-weight: 620;
-}
-
-.coauthor-criteria-link svg {
-  width: 16px;
-  height: 16px;
-  flex: 0 0 auto;
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 2;
 }
 
 .coauthor-criteria-link:hover,
@@ -573,7 +567,12 @@ pre {
 .hero-example-links {
   width: min(100%, 700px);
   margin-top: 14px;
+  padding: 0;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.hero-example-links > * {
+  min-height: 48px;
 }
 
 .section-example-links {
@@ -2655,9 +2654,9 @@ pre {
   }
 
   .hero-actions {
-    width: 100%;
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: 8px;
+    width: min(100%, 700px);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5px;
   }
 
   .hero-actions .button {
@@ -2845,7 +2844,7 @@ pre {
 
   .hero-actions {
     align-items: stretch;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 6px;
   }
 
@@ -2891,8 +2890,7 @@ pre {
     display: inline;
   }
 
-  .hero-actions .button svg,
-  .coauthor-criteria-link svg {
+  .hero-actions .button svg {
     display: none;
   }
 
