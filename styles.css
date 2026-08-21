@@ -1127,6 +1127,23 @@ pre {
   white-space: nowrap;
 }
 
+.mechanism-list {
+  display: grid;
+  margin: 0;
+  padding-left: 21px;
+  gap: 16px;
+}
+
+.mechanism-list li {
+  padding-left: 3px;
+}
+
+.mechanism-list li::marker {
+  color: var(--text-faint);
+  font-size: 12px;
+  font-weight: 750;
+}
+
 .mechanism-strip p {
   margin: 9px 0 0;
   color: var(--text-soft);
