@@ -542,34 +542,30 @@
             <article class="points-card">
               <div class="points-card-header">
                 <div>
-                  <span>Task contribution</span>
-                  <h3>Points by number of official model failures</h3>
+                  <span>Task reward tiers</span>
+                  <h3>Points by official model failures</h3>
                 </div>
-                <span class="minimum-chip">minimum 2 failures</span>
+                <span class="minimum-chip">2 failures required</span>
               </div>
-              <div class="points-chart">
-                <div class="points-row">
-                  <span class="fail-count">5 failures</span>
-                  <div class="points-bar"><span style="--bar-width: 100%"></span></div>
-                  <strong>8 pts</strong>
-                </div>
-                <div class="points-row">
-                  <span class="fail-count">4 failures</span>
-                  <div class="points-bar"><span style="--bar-width: 75%"></span></div>
-                  <strong>6 pts</strong>
-                </div>
-                <div class="points-row">
-                  <span class="fail-count">3 failures</span>
-                  <div class="points-bar"><span style="--bar-width: 50%"></span></div>
-                  <strong>4 pts</strong>
-                </div>
-                <div class="points-row">
-                  <span class="fail-count">2 failures</span>
-                  <div class="points-bar"><span style="--bar-width: 25%"></span></div>
-                  <strong>2 pts</strong>
-                </div>
-              </div>
-              <p>Tasks with fewer than two official model failures are not merged.</p>
+              <ol class="points-tiers" aria-label="Task contribution point tiers">
+                <li>
+                  <span>2 failures</span>
+                  <strong>+2 points</strong>
+                </li>
+                <li>
+                  <span>3 failures</span>
+                  <strong>+4 points</strong>
+                </li>
+                <li>
+                  <span>4 failures</span>
+                  <strong>+6 points</strong>
+                </li>
+                <li>
+                  <span>5 failures</span>
+                  <strong>+8 points</strong>
+                </li>
+              </ol>
+              <p>A task must make at least two official models fail before it can be merged.</p>
             </article>
 
             <div class="side-credit-grid">
