@@ -212,6 +212,29 @@ pre {
   gap: 6px;
 }
 
+.discord-link {
+  position: relative;
+}
+
+.discord-link::after {
+  position: absolute;
+  right: -4px;
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+  content: "";
+  pointer-events: none;
+}
+
+.discord-link + #theme-toggle {
+  margin-left: 3px;
+}
+
+.discord-link svg circle {
+  fill: currentColor;
+  stroke: none;
+}
+
 .icon-button {
   display: inline-grid;
   width: 38px;
@@ -601,6 +624,10 @@ pre {
 .example-page-disabled {
   cursor: default;
   opacity: 0.62;
+}
+
+.repo-access-link {
+  border: 1px solid rgba(36, 92, 255, 0.14);
 }
 
 .example-page-links a:hover,
@@ -2523,7 +2550,7 @@ pre {
 
 .footer-links {
   display: grid;
-  grid-template-columns: repeat(2, minmax(150px, 1fr));
+  grid-template-columns: repeat(3, minmax(140px, 1fr));
   gap: 48px;
 }
 
@@ -3086,6 +3113,32 @@ pre {
     width: auto;
     min-width: 980px;
     max-width: none;
+  }
+}
+
+@media (max-width: 360px) {
+  .site-nav {
+    width: calc(100% - 12px);
+    gap: 8px;
+    padding-right: 7px;
+    padding-left: 10px;
+  }
+
+  .site-nav .brand span {
+    display: none;
+  }
+
+  .section-marker {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .section-heading.centered .section-marker {
+    align-items: center;
+  }
+
+  .section-marker > h2 {
+    min-width: 0;
   }
 }
 
