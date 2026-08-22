@@ -212,8 +212,10 @@ pre {
   gap: 6px;
 }
 
-.discord-link {
+.icon-button.discord-link {
   position: relative;
+  width: 44px;
+  height: 44px;
 }
 
 .discord-link::after {
@@ -233,6 +235,12 @@ pre {
 .discord-link svg circle {
   fill: currentColor;
   stroke: none;
+}
+
+.icon-button.discord-link svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 1.9;
 }
 
 .icon-button {
