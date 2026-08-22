@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import contextlib
+import hashlib
 import math
+import shutil
 from pathlib import Path
 from typing import Any
 
@@ -11,7 +13,14 @@ from safetensors.torch import load_file, save_file
 from torch import nn
 
 from common import read_json, write_json
-from settings import ADAPTER_ALPHA, ADAPTER_RANK, ADAPTER_TARGETS
+from settings import (
+    ADAPTER_ALPHA,
+    ADAPTER_RANK,
+    ADAPTER_TARGETS,
+    MODEL_REPOSITORY,
+    MODEL_REVISION,
+    MODEL_WEIGHT_SHA256,
+)
 
 
 def no_autocast(device_type: str):
@@ -93,7 +102,9 @@ def adapter_parameters(model: Any) -> dict[str, nn.Parameter]:
 
 
 def save_adapter(model: Any, output_dir: Path) -> None:
-    output_dir.mkdir(parents=True, exist_ok=False)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    (output_dir / "adapter.safetensors").unlink(missing_ok=True)
+    (output_dir / "adapter_config.json").unlink(missing_ok=True)
     save_file(
         {
             name: parameter.detach().cpu().contiguous()
@@ -137,6 +148,39 @@ def load_adapter(model: Any, output_dir: Path) -> None:
             )
 
 
+def prepare_base_model(base_model_dir: Path) -> None:
+    from huggingface_hub import hf_hub_download
+
+    base_model_dir = base_model_dir.resolve()
+    weight = base_model_dir / "model.safetensors"
+    if not weight.is_file():
+        downloaded = Path(
+            hf_hub_download(
+                repo_id=MODEL_REPOSITORY,
+                filename=weight.name,
+                revision=MODEL_REVISION,
+                local_dir=base_model_dir,
+            )
+        )
+        if downloaded.resolve() != weight:
+            raise RuntimeError(
+                f"model weight downloaded to {downloaded}, not {weight}"
+            )
+    digest = hashlib.sha256()
+    with weight.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(8 * 1024 * 1024), b""):
+            digest.update(chunk)
+    actual = digest.hexdigest()
+    if actual != MODEL_WEIGHT_SHA256:
+        raise RuntimeError(
+            "base model digest differs: "
+            f"expected {MODEL_WEIGHT_SHA256}, found {actual}"
+        )
+    cache = base_model_dir / ".cache"
+    if cache.is_dir():
+        shutil.rmtree(cache)
+
+
 def load_model(
     base_model_dir: Path,
     *,
@@ -145,6 +189,8 @@ def load_model(
 ) -> tuple[Any, Any]:
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
+    if not (base_model_dir / "model.safetensors").is_file():
+        prepare_base_model(base_model_dir)
     tokenizer = AutoTokenizer.from_pretrained(
         base_model_dir.resolve(),
         local_files_only=True,

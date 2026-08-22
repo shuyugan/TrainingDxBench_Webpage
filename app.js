@@ -383,10 +383,10 @@
                   .map(([name, language]) =>
                     fileItem(name.split("/").at(-1), path(`model/${name}`), language),
                   ),
-                assetItem("tokenizer.json", "11.4 MB"),
-                assetItem("model.safetensors", "988 MB"),
+                assetItem("tokenizer.json", "submitted · 11.4 MB"),
+                assetItem("model.safetensors", "downloaded locally · ignored"),
               ],
-              { badge: "base model" },
+              { badge: "config + local weight" },
             ),
             folderItem(
               "adapter",
@@ -396,12 +396,12 @@
                   path("model/adapter/adapter_config.json"),
                   "json",
                 ),
-                assetItem("adapter.safetensors", "4.3 MB"),
+                assetItem("adapter.safetensors", "generated locally · ignored"),
               ],
-              { badge: "LoRA" },
+              { badge: "config submitted" },
             ),
           ],
-          { badge: "958 MB" },
+          { badge: "weights ignored" },
         ),
         folderItem(
           "training",
@@ -412,17 +412,13 @@
                 path("training/base_validation/summary.json"),
                 "json",
               ),
-              assetItem("predictions.jsonl", "3.2 MB"),
+              assetItem("predictions.jsonl", "submitted · 3.2 MB"),
             ]),
             folderItem("checkpoint", [
-              fileItem(
-                "trainer_state.json",
-                path("training/checkpoint/trainer_state.json"),
-                "json",
-              ),
-              assetItem("optimizer.pt", "8.7 MB"),
-              assetItem("rng_rank_0..3.pt", "4 files"),
-              assetItem("scheduler.pt", "1 KB"),
+              assetItem("trainer_state.json", "generated locally · ignored"),
+              assetItem("optimizer.pt", "generated locally · ignored"),
+              assetItem("rng_rank_0..3.pt", "generated locally · ignored"),
+              assetItem("scheduler.pt", "generated locally · ignored"),
             ]),
             folderItem("dev_validation", [
               fileItem(
@@ -432,7 +428,9 @@
               ),
               assetItem(
                 "predictions.jsonl",
-                corrected ? "1.58 MB" : "1.57 MB",
+                corrected
+                  ? "submitted · 1.58 MB"
+                  : "submitted · 1.57 MB",
               ),
             ]),
             folderItem("final_validation", [
@@ -443,7 +441,9 @@
               ),
               assetItem(
                 "predictions.jsonl",
-                corrected ? "3.23 MB" : "3.21 MB",
+                corrected
+                  ? "submitted · 3.23 MB"
+                  : "submitted · 3.21 MB",
               ),
             ]),
             fileItem(
@@ -452,7 +452,7 @@
               "json",
             ),
           ],
-          { badge: "17 MB" },
+          { badge: "evidence + local state" },
         ),
       ],
       { open: arm === "flawed", badge: corrected ? "corrected" : "affected" },
@@ -508,7 +508,7 @@
             "trajectory.jsonl",
             "./example/evaluation/trajectory.jsonl",
             "json",
-            { size: "sanitized" },
+            { size: "normalized" },
           ),
           fileItem(
             "answer.txt",
@@ -517,7 +517,7 @@
             {
               active: true,
               labelPath:
-                "evaluation/results/padding-free-chat-packing/copilot--claude-sonnet-5/answer.txt",
+                "results/padding-free-chat-packing/copilot--claude-sonnet-5/answer.txt",
             },
           ),
           fileItem(
@@ -545,7 +545,7 @@
             "judge-trajectory.jsonl",
             "./example/evaluation/judge-trajectory.jsonl",
             "json",
-            { size: "sanitized" },
+            { size: "normalized" },
           ),
           fileItem(
             "judge.json",

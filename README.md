@@ -23,11 +23,13 @@ styles.css       Responsive visual system and layout
 app.js           Neural background, code browsers, theme, and interactions
 assets/          Optimized diagrams and site icon
 example/         Public example task and evaluation artifacts
-CALL_FOR_PARTICIPATION.md  Full authoritative participation rules
 ```
 
 The page has no runtime package dependencies and uses only relative asset
 paths, so it can be hosted at the repository root or under a subpath.
+
+The current contribution and evaluation rules are maintained in
+<https://github.com/shuyugan/TrainingDxBench>.
 
 The public site is published from the root of the `main` branch with GitHub
 Pages. Pushing an update to `main` refreshes the deployed page.

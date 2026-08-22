@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import math
+import shutil
 from pathlib import Path
 from typing import Any
 
@@ -128,7 +129,9 @@ def main() -> None:
         device=device,
     )
     output_dir = args.output_dir.resolve()
-    output_dir.mkdir(parents=True, exist_ok=False)
+    if output_dir.exists():
+        shutil.rmtree(output_dir)
+    output_dir.mkdir(parents=True)
     write_json(
         output_dir / "summary.json", summary, exclusive=True
     )

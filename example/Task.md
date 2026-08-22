@@ -32,6 +32,8 @@ The canonical correction omits the overriding attention mask and masks labels
 at every reset position. Both changes are required to recover independent
 document semantics.
 
+## Realistic Information (Optional)
+
 ## Training Configuration
 
 | Field | Value |

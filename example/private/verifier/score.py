@@ -143,7 +143,7 @@ def batch_pipeline_metrics(batch: dict) -> tuple[int, int]:
 def training_process_metrics(workspace: Path) -> dict[str, float]:
     rows = load_jsonl(workspace / "data" / "train.jsonl")
     with workspace_modules(workspace) as (settings, collator_module):
-        replicas = int(settings.WORLD_SIZE)
+        reference_replicas = int(settings.REFERENCE_WORLD_SIZE)
         batch_size = int(settings.DOCUMENTS_PER_PACK)
         seed = int(settings.SEED)
         if len(rows) != int(settings.TRAIN_EXAMPLES):
@@ -151,10 +151,10 @@ def training_process_metrics(workspace: Path) -> dict[str, float]:
         collator = collator_module.PackedBatchCollator()
         cross_pairs = 0
         boundary_targets = 0
-        for rank in range(replicas):
+        for rank in range(reference_replicas):
             indices = distributed_indices(
                 examples=len(rows),
-                replicas=replicas,
+                replicas=reference_replicas,
                 rank=rank,
                 seed=seed,
             )
@@ -179,14 +179,57 @@ def training_process_metrics(workspace: Path) -> dict[str, float]:
 def measured_metrics(workspace: Path, output: Path) -> dict[str, float]:
     metrics = training_process_metrics(workspace)
     summary = load_object(output / "final_validation" / "summary.json")
-    perplexity = summary.get("perplexity")
+    records = load_jsonl(workspace / "data" / "validation.jsonl")
+    predictions = load_jsonl(
+        output / "final_validation" / "predictions.jsonl"
+    )
+    expected_ids = [str(row["example_id"]) for row in records]
+    predicted_ids = [str(row["example_id"]) for row in predictions]
+    if predicted_ids != expected_ids:
+        raise ValueError(
+            "validation prediction IDs or order differ from frozen records"
+        )
+    total_log_probability = 0.0
+    total_tokens = 0
+    for row in predictions:
+        targets = row.get("target_token_ids")
+        values = row.get("target_token_log_probabilities")
+        if (
+            not isinstance(targets, list)
+            or not isinstance(values, list)
+            or not targets
+            or len(targets) != len(values)
+        ):
+            raise ValueError("validation prediction token evidence is invalid")
+        for value in values:
+            if (
+                isinstance(value, bool)
+                or not isinstance(value, (int, float))
+                or not math.isfinite(float(value))
+            ):
+                raise ValueError(
+                    "validation token log probability is invalid"
+                )
+            total_log_probability += float(value)
+        total_tokens += len(values)
+    perplexity = math.exp(-total_log_probability / total_tokens)
+    summary_perplexity = summary.get("perplexity")
     if (
-        isinstance(perplexity, bool)
-        or not isinstance(perplexity, (int, float))
-        or not math.isfinite(float(perplexity))
+        isinstance(summary_perplexity, bool)
+        or not isinstance(summary_perplexity, (int, float))
+        or not math.isfinite(float(summary_perplexity))
     ):
         raise ValueError("validation perplexity is invalid")
-    metrics["validation_perplexity"] = float(perplexity)
+    if not math.isclose(
+        perplexity,
+        float(summary_perplexity),
+        rel_tol=1e-12,
+        abs_tol=1e-12,
+    ):
+        raise ValueError(
+            "validation summary perplexity differs from prediction evidence"
+        )
+    metrics["validation_perplexity"] = perplexity
     return metrics
 
 

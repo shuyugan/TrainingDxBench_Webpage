@@ -1,23 +1,27 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-OUTPUT_DIR="${1:?usage: launch.sh OUTPUT_DIR}"
-PYTHON="${PYTHON:-python}"
-
-mkdir -p "$OUTPUT_DIR"
-if find "$OUTPUT_DIR" -mindepth 1 -print -quit | grep -q .; then
-  echo "output directory must be empty: $OUTPUT_DIR" >&2
+if (( $# != 0 )); then
+  echo "usage: bash launch.sh" >&2
   exit 1
 fi
+
+WORKSPACE_ROOT="$(
+  cd "$(dirname "${BASH_SOURCE[0]}")"
+  pwd
+)"
+cd "$WORKSPACE_ROOT"
+
+PYTHON="${PYTHON:-python3}"
 
 export CUBLAS_WORKSPACE_CONFIG=:16:8
 export PYTHONHASHSEED=108
 export PYTHONDONTWRITEBYTECODE=1
 export TOKENIZERS_PARALLELISM=false
 export TORCH_NCCL_ASYNC_ERROR_HANDLING=1
-export TRANSFORMERS_OFFLINE=1
 export HF_DATASETS_OFFLINE=1
 export PYTHONPATH=source
+unset HF_HUB_OFFLINE TRANSFORMERS_OFFLINE
 
 GPU_COUNT="$(
   "$PYTHON" -c \
@@ -44,18 +48,27 @@ fi
   source/train.py \
   --base-model-dir model/base \
   --train-records data/train.jsonl \
-  --output-dir "$OUTPUT_DIR/training"
+  --output-dir training
+
+export HF_HUB_OFFLINE=1
+export TRANSFORMERS_OFFLINE=1
 
 "$PYTHON" source/evaluate.py \
   --base-model-dir model/base \
-  --adapter-dir "$OUTPUT_DIR/training/adapter" \
-  --records data/dev.jsonl \
-  --output-dir "$OUTPUT_DIR/dev_validation" \
+  --records data/validation.jsonl \
+  --output-dir training/base_validation \
   --device cuda:0
 
 "$PYTHON" source/evaluate.py \
   --base-model-dir model/base \
-  --adapter-dir "$OUTPUT_DIR/training/adapter" \
+  --adapter-dir model/adapter \
+  --records data/dev.jsonl \
+  --output-dir training/dev_validation \
+  --device cuda:0
+
+"$PYTHON" source/evaluate.py \
+  --base-model-dir model/base \
+  --adapter-dir model/adapter \
   --records data/validation.jsonl \
-  --output-dir "$OUTPUT_DIR/final_validation" \
+  --output-dir training/final_validation \
   --device cuda:0

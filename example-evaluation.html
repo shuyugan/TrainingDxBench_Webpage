@@ -181,16 +181,18 @@
             <span>Protocol note</span>
             This run completed in 990.778 seconds without exhausting its 1,800-second
             Agent budget. It had no limits on steps, turns, tool calls, or optimizer
-            updates.
+            updates. The contributor result ends after the Judge; after merge, the
+            project may add Layer 2 retraining to test alternative-repair metric
+            recovery.
           </div>
 
           <div class="browser-context">
             <strong>Complete evaluation result structure</strong>
             <p>
               Browse the Agent's answer, frozen submission, proposed repair,
-              Judge evidence, and final result. Public Agent and Judge trajectories
-              preserve the original runtime events, messages, tool calls, tool
-              results, timing, and outcomes.
+              Judge evidence, and final result. Normalized public Agent and Judge
+              trajectories preserve prompts, messages, tool calls, tool results,
+              timing, and outcomes while removing runtime-private metadata.
             </p>
           </div>
 
@@ -200,7 +202,7 @@
                 <span></span><span></span><span></span>
               </div>
               <div class="browser-path" data-browser-path>
-                evaluation/results/padding-free-chat-packing/<strong>answer.txt</strong>
+                results/padding-free-chat-packing/copilot--claude-sonnet-5/<strong>answer.txt</strong>
               </div>
               <div class="browser-actions">
                 <button type="button" data-wrap-toggle aria-pressed="true">
@@ -259,7 +261,6 @@
           <div>
             <h3>Contribute</h3>
             <a href="./index.html#submit">Contribute to the benchmark</a>
-            <a href="./CALL_FOR_PARTICIPATION.md" target="_blank" rel="noreferrer">Full participation call</a>
           </div>
           <div>
             <h3>Community</h3>
@@ -267,7 +268,7 @@
               href="https://docs.google.com/forms/d/e/1FAIpQLSdWQRV1B5bYtbjG5T1f16f9kn0bz9mH0goi0WeMLJK6NTNIoA/viewform?usp=dialog"
               target="_blank"
               rel="noopener noreferrer"
-            >Request repo access</a>
+            >Contribution form</a>
             <a href="https://discord.gg/nwzdHVFbF" target="_blank" rel="noopener noreferrer">Discord</a>
           </div>
         </div>

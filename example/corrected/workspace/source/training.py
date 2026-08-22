@@ -6,6 +6,7 @@ import json
 import math
 import os
 import random
+import shutil
 from datetime import timedelta
 from pathlib import Path
 
@@ -15,12 +16,16 @@ import torch.distributed as dist
 import torch.nn.functional as functional
 from torch.nn.parallel import DistributedDataParallel
 from torch.utils.data import DataLoader
-from torch.utils.data.distributed import DistributedSampler
 
 from collator import PackedBatchCollator
 from common import write_json
 from data import ChatDocumentDataset
-from model import adapter_parameters, load_model, save_adapter
+from model import (
+    adapter_parameters,
+    load_model,
+    prepare_base_model,
+    save_adapter,
+)
 from settings import (
     DOCUMENTS_PER_PACK,
     GRADIENT_ACCUMULATION_STEPS,
@@ -28,6 +33,7 @@ from settings import (
     LEARNING_RATE,
     OPTIMIZER_BETAS,
     OPTIMIZER_EPSILON,
+    REFERENCE_WORLD_SIZE,
     SEED,
     TRAIN_EXAMPLES,
     UPDATES,
@@ -35,6 +41,51 @@ from settings import (
     WEIGHT_DECAY,
     WORLD_SIZE,
 )
+
+
+class ReferencePackBatchSampler:
+    def __init__(
+        self,
+        *,
+        examples: int,
+        world_size: int,
+        rank: int,
+        seed: int,
+    ) -> None:
+        if REFERENCE_WORLD_SIZE % world_size:
+            raise RuntimeError(
+                f"{world_size} ranks cannot distribute "
+                f"{REFERENCE_WORLD_SIZE} reference pack lanes"
+            )
+        if not 0 <= rank < world_size:
+            raise RuntimeError(f"invalid rank {rank} for {world_size} ranks")
+        generator = torch.Generator()
+        generator.manual_seed(seed)
+        order = torch.randperm(examples, generator=generator).tolist()
+        lanes = [
+            order[lane::REFERENCE_WORLD_SIZE]
+            for lane in range(REFERENCE_WORLD_SIZE)
+        ]
+        expected_lane_examples = UPDATES * DOCUMENTS_PER_PACK
+        if any(
+            len(indices) != expected_lane_examples
+            for indices in lanes
+        ):
+            raise RuntimeError(
+                "reference pack lanes do not match the update schedule"
+            )
+        self.batches = []
+        for update in range(UPDATES):
+            start = update * DOCUMENTS_PER_PACK
+            stop = start + DOCUMENTS_PER_PACK
+            for lane in range(rank, REFERENCE_WORLD_SIZE, world_size):
+                self.batches.append(lanes[lane][start:stop])
+
+    def __iter__(self):
+        return iter(self.batches)
+
+    def __len__(self) -> int:
+        return len(self.batches)
 
 
 def set_determinism() -> None:
@@ -65,13 +116,16 @@ def save_training_state(
     optimizer: torch.optim.Optimizer,
     scheduler: torch.optim.lr_scheduler.LRScheduler,
     output_dir: Path,
+    adapter_output_dir: Path,
     rank: int,
     local_rank: int,
 ) -> None:
     if rank == 0:
-        save_adapter(model.module, output_dir / "adapter")
+        save_adapter(model.module, adapter_output_dir)
         checkpoint = output_dir / "checkpoint"
-        checkpoint.mkdir(parents=True, exist_ok=False)
+        if checkpoint.exists():
+            shutil.rmtree(checkpoint)
+        checkpoint.mkdir(parents=True)
         torch.save(optimizer.state_dict(), checkpoint / "optimizer.pt")
         torch.save(scheduler.state_dict(), checkpoint / "scheduler.pt")
         write_json(
@@ -107,14 +161,18 @@ def run_training(args: argparse.Namespace) -> None:
     dist.init_process_group(
         "nccl", device_id=device, timeout=timedelta(hours=3)
     )
+    base_model_dir = args.base_model_dir.resolve()
     output_dir = args.output_dir.resolve()
+    adapter_output_dir = base_model_dir.parent / "adapter"
     try:
         if rank == 0:
-            output_dir.mkdir(parents=True, exist_ok=False)
+            prepare_base_model(base_model_dir)
+            output_dir.mkdir(parents=True, exist_ok=True)
+            (output_dir / "training_trace.jsonl").unlink(missing_ok=True)
         dist.barrier(device_ids=[local_rank])
         set_determinism()
         model, _ = load_model(
-            args.base_model_dir.resolve(),
+            base_model_dir,
             adapter_dir=None,
             device=device,
         )
@@ -139,21 +197,17 @@ def run_training(args: argparse.Namespace) -> None:
         dataset = ChatDocumentDataset(args.train_records.resolve())
         if len(dataset) != TRAIN_EXAMPLES:
             raise RuntimeError("training document count differs")
-        sampler = DistributedSampler(
-            dataset,
-            num_replicas=world_size,
+        batch_sampler = ReferencePackBatchSampler(
+            examples=len(dataset),
+            world_size=world_size,
             rank=rank,
-            shuffle=True,
             seed=SEED,
-            drop_last=False,
         )
         loader = DataLoader(
             dataset,
-            batch_size=DOCUMENTS_PER_PACK,
-            sampler=sampler,
+            batch_sampler=batch_sampler,
             collate_fn=PackedBatchCollator(),
             num_workers=0,
-            drop_last=False,
         )
         expected_microbatches = UPDATES * GRADIENT_ACCUMULATION_STEPS
         if len(loader) != expected_microbatches:
@@ -166,7 +220,6 @@ def run_training(args: argparse.Namespace) -> None:
             else None
         )
         try:
-            sampler.set_epoch(0)
             loader_iterator = iter(loader)
             for update in range(1, UPDATES + 1):
                 microbatches = []
@@ -272,6 +325,7 @@ def run_training(args: argparse.Namespace) -> None:
             optimizer=optimizer,
             scheduler=scheduler,
             output_dir=output_dir,
+            adapter_output_dir=adapter_output_dir,
             rank=rank,
             local_rank=local_rank,
         )
