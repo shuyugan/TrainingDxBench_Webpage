@@ -2593,6 +2593,32 @@ pre {
   line-height: 0.98;
 }
 
+.collection-goal {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 22px;
+  padding: 8px 12px;
+  border: 1px solid rgba(36, 92, 255, 0.24);
+  border-radius: 999px;
+  background: var(--accent-soft);
+}
+
+.collection-goal span {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 760;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.collection-goal strong {
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 780;
+}
+
 .credit-paths {
   display: flex;
   flex-wrap: wrap;
