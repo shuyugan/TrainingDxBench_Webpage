@@ -38,7 +38,7 @@ document semantics.
 
 | Field | Value |
 |---|---|
-| Original Execution | `bash launch.sh /path/to/new-output-directory` |
+| Reproduction Entrypoint | `bash launch.sh [--gpus <id-list>]` |
 | Model | `Qwen/Qwen2.5-0.5B` |
 | Tokenizer | Tokenizer stored with the workspace model |
 | Dataset | `trl-lib/Capybara` |
@@ -51,7 +51,7 @@ document semantics.
 | Trainable Parameters | Rank-16 attention LoRA on `q_proj` and `v_proj`; alpha 32 |
 | Optimizer | AdamW; learning rate `2e-4`; zero weight decay |
 | Random Seed | 108 |
-| Dependencies | Pinned in each workspace's `requirements.txt`; all data and model assets are offline |
+| Dependencies | Pinned in each workspace's `requirements.txt`; an omitted base weight is downloaded from the pinned model revision |
 | Official Evaluation Metric | `validation_perplexity` — unpacked held-out token-weighted perplexity |
 | Differential Metrics | `validation_perplexity`; `cross_document_attention_pairs`; `cross_document_boundary_targets` |
 
