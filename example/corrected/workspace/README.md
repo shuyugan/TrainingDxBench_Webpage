@@ -6,7 +6,7 @@ one completed parameter-efficient chat-model training run.
 - `data/` contains the training, development, and validation records.
 - `source/` contains the exact training and evaluation implementation.
 - `model/base/` contains the pinned initialization configuration and tokenizer;
-  `source/model.py` downloads and verifies the omitted base weight when needed.
+  `source/model.py` downloads the omitted base weight when needed.
 - `model/adapter/` contains committed non-weight metadata and, after
   reproduction, the generated parameter-efficient weights.
 - `training/` contains the accepted traces and evaluation evidence; rerunning
@@ -25,13 +25,9 @@ The Python dependencies used by the completed run are listed in
 python -m pip install -r requirements.txt
 ```
 
-## Original training invocation
+## Original Training Invocation
 
-The standard workspace entrypoint detects `GPU_COUNT` from the visible CUDA
-devices. The source forms the same four reference pack lanes before assigning
-whole packs to active ranks, so one, two, or four GPUs preserve pack
-membership and optimizer-update grouping. Gradient accumulation preserves
-effective batch 16, one epoch, and 256 optimizer updates.
+The archived formal run used 4 x NVIDIA RTX A5500 GPUs.
 
 ```bash
 bash launch.sh
